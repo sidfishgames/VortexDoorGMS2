@@ -1,0 +1,37 @@
+///***Create event***
+
+spiral_rotate = 0; //starting position of rotation
+spiral_surf = -1; //initialize the surface variable
+
+// update variables below as needed
+
+frame_sprite = spr_your_frame_sprite;
+vortex_sprite = spr_your_vortex_sprite;
+
+vortex_scale = 1; //draw scale of vortex (if the spiral is slightly larger than the frame sprite, can be left to 1)
+vortex_alpha = 0.4; //draw alpha of vertex
+rotate_speed = 2; //rotation speed, positive number for anticlockwise, negative for clockwise
+
+///***Draw event***
+
+spiral_rotate = spiral_rotate + rotate_speed; //update rotation
+
+var frame_width = sprite_get_width(frame_sprite);
+var frame_height = sprite_get_height(frame_sprite);	
+
+if (!surface_exists(spiral_surf)) { //always check surface exists
+    spiral_surf = surface_create(frame_width, frame_height); //size of surface matches frame sprite
+
+} else {
+    surface_set_target(spiral_surf); //start drawing to surface
+		draw_sprite_ext(vortex_sprite, 0, frame_width/2, frame_height/2, vortex_scale, vortex_scale, spiral_rotate, c_white, vortex_alpha);
+		surface_reset_target(); //stop drawing to surface
+		draw_surface(spiral_surf, x-(frame_width/2), y-frame_height); //draw surface to screen
+}
+
+draw_sprite(frame_sprite, 0, x, y-1); //finally draw the frame last so its drawn over the vortex effect
+
+
+///***Clean Up event***
+
+surface_free(spiral_surf);
